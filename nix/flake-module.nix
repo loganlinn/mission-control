@@ -93,7 +93,8 @@ in
                     inherit (config.mission-control) scripts enableAliases wrapper banner wrapperName;
                     aliases = lib.optionalString enableAliases
                       (lib.concatLines
-                        (lib.mapAttrs (name: value: ''alias ${name}='${wrapper}/bin/${wrapperName} ${name}''''') scripts));
+                        (lib.forEach (lib.attrNames scripts)
+                          (name: ''alias ${name}='${wrapper}/bin/${wrapperName} ${name}''''')));
                   in
                   {
                     nativeBuildInputs = (oa.nativeBuildInputs or [ ]) ++ [ wrapper ];
