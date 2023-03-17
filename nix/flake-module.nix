@@ -94,7 +94,7 @@ in
                     aliases = lib.optionalString enableAliases
                       (lib.concatLines
                         (lib.forEach (lib.attrNames scripts)
-                          (name: ''alias ${name}='${wrapper}/bin/${wrapperName} ${name}''''')));
+                          (name: ''alias '${name}'='${wrapper}/bin/${wrapperName} ${name}''''')));
                   in
                   {
                     nativeBuildInputs = (oa.nativeBuildInputs or [ ]) ++ [ wrapper ];
