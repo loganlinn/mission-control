@@ -90,10 +90,10 @@ in
                 '';
                 default = shell: shell.overrideAttrs (oa:
                   let
-                    inherit (config.mission-control) commands enableAliases wrapper banner wrapperName;
+                    inherit (config.mission-control) scripts enableAliases wrapper banner wrapperName;
                     aliases = lib.optionalString enableAliases
                       (lib.concatLines
-                        (lib.mapAttrs (name: value: ''alias ${name}='${wrapper}/bin/${wrapperName} ${name}''''') commands));
+                        (lib.mapAttrs (name: value: ''alias ${name}='${wrapper}/bin/${wrapperName} ${name}''''') scripts));
                   in
                   {
                     nativeBuildInputs = (oa.nativeBuildInputs or [ ]) ++ [ wrapper ];
