@@ -47,6 +47,13 @@ in
                 '';
                 default = ",";
               };
+              enableAliases = mkOption {
+                type = types.bool;
+                # # TODO
+                # description = lib.mdDoc ''
+                # '';
+                default = false;
+              };
               scripts = mkOption {
                 type = types.attrsOf scriptSubmodule;
                 description = lib.mdDoc ''
@@ -83,11 +90,14 @@ in
                 '';
                 default = shell: shell.overrideAttrs (oa:
                   let
-                    inherit (config.mission-control) wrapper banner;
+                    inherit (config.mission-control) commands enableAliases wrapper banner wrapperName;
+                    aliases = lib.optionalString enableAliases
+                      (lib.concatLines
+                        (lib.mapAttrs (name: value: ''alias ${name}='${wrapper}/bin/${wrapperName} ${name}''''') commands));
                   in
                   {
                     nativeBuildInputs = (oa.nativeBuildInputs or [ ]) ++ [ wrapper ];
-                    shellHook = (oa.shellHook or "") + banner;
+                    shellHook = (oa.shellHook or "") + aliases + banner;
                   });
               };
             };

@@ -17,6 +17,7 @@ let
     let
       commands = lib.mapAttrsToList mkCommand spec;
       commandsGrouped = lib.groupBy (a: a.meta.category) commands;
+      commandPrefix = if mission-control.enableAliases then "" else "${mission-control.wrapperName} ";
     in
     pkgs.writeShellApplication {
       name = mission-control.wrapperName;
@@ -32,7 +33,7 @@ let
                     (map (drv: 
                       let name = builtins.baseNameOf (lib.getExe drv);
                           desc = drv.meta.description;
-                      in "  ${mission-control.wrapperName} " + name + "\t: " + desc
+                      in "  ${commandPrefix}" + name + "\t: " + desc
                     ) commands 
                     ) + "' | ${lib.getExe pkgs.unixtools.column} -t -s ''$'\t'; "
               ) commandsGrouped)
